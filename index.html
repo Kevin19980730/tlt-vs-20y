@@ -61,11 +61,11 @@ label.chk{display:flex;gap:6px;align-items:center;font-size:.85rem;color:var(--i
 .legend .dot{width:10px;height:10px;border-radius:50%}
 .phead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin-bottom:8px}
 @media (max-width:760px){.desk{grid-template-columns:1fr}.h-scatter{height:340px}h1{font-size:1.5rem}}
-.zbtn{position:absolute;top:2px;right:2px;z-index:2;font:500 .72rem var(--f-data);color:var(--ink-2);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:3px 8px;cursor:pointer;opacity:.85}
+.zbtn{position:absolute;top:2px;right:2px;z-index:2;font:500 .95rem/1 var(--f-data);color:var(--ink-2);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:3px 6px;cursor:pointer;opacity:.85}
 .zbtn:hover{opacity:1;color:var(--ink)}
 .cbox.zoomed{position:fixed;inset:0;z-index:50;height:auto!important;max-height:none;margin:0;background:var(--panel);padding:60px 20px 16px;box-sizing:border-box}
-.cbox.zoomed .zbtn{top:10px;right:16px;font-size:.85rem;padding:5px 12px}
-.ztitle{display:none}.cbox.zoomed .ztitle{display:block;position:absolute;top:10px;left:20px;right:170px;font:700 .9rem/1.3 var(--f-display);color:var(--ink)}
+.cbox.zoomed .zbtn{top:10px;right:16px;font-size:1.1rem;padding:5px 10px}
+.ztitle{display:none}.cbox.zoomed .ztitle{display:block;position:absolute;top:10px;left:20px;right:70px;font:700 .9rem/1.3 var(--f-display);color:var(--ink)}
 body.zoom-open{overflow:hidden}
 .ccol{display:flex;flex-direction:column;gap:4px}.chips{display:flex;flex-wrap:wrap;gap:6px}
 .hcol{min-width:0}.hhead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
@@ -356,12 +356,12 @@ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render)
 new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 document.querySelectorAll('#crange button').forEach(b=>b.onclick=()=>{S.cm=+b.dataset.m;document.querySelectorAll('#crange button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 // Enlarge: every chart box gets a button that opens it as a full-window overlay
-function closeZoom(){document.querySelectorAll('.cbox.zoomed').forEach(c=>{c.classList.remove('zoomed');c.querySelector('.zbtn').textContent='Enlarge \u2922'});document.body.classList.remove('zoom-open');Object.values(charts).forEach(c=>c.resize())}
+function closeZoom(){document.querySelectorAll('.cbox.zoomed').forEach(c=>{c.classList.remove('zoomed');{const b=c.querySelector('.zbtn');b.textContent='\u2922';b.title=b.ariaLabel='Enlarge chart'}});document.body.classList.remove('zoom-open');Object.values(charts).forEach(c=>c.resize())}
 document.querySelectorAll('.cbox').forEach(box=>{
   const head=box.previousElementSibling, t=document.createElement('div');t.className='ztitle';
   t.textContent=(head&&head.querySelector('.lbl')?head.querySelector('.lbl').textContent:head&&head.classList.contains('lbl')?head.textContent:'')||box.closest('section').querySelector('h2').textContent;
-  const b=document.createElement('button');b.className='zbtn';b.type='button';b.textContent='Enlarge \u2922';
-  b.onclick=()=>{if(box.classList.contains('zoomed')){closeZoom();return}closeZoom();box.classList.add('zoomed');document.body.classList.add('zoom-open');b.textContent='Close \u2715  (Esc)';const id=box.querySelector('canvas').id;setTimeout(()=>{charts[id]&&charts[id].resize();render()},30)};
+  const b=document.createElement('button');b.className='zbtn';b.type='button';b.textContent='\u2922';b.title=b.ariaLabel='Enlarge chart';
+  b.onclick=()=>{if(box.classList.contains('zoomed')){closeZoom();return}closeZoom();box.classList.add('zoomed');document.body.classList.add('zoom-open');b.textContent='\u2715';b.title=b.ariaLabel='Close (Esc)';const id=box.querySelector('canvas').id;setTimeout(()=>{charts[id]&&charts[id].resize();render()},30)};
   t.dataset.base=t.textContent;box.prepend(t);box.appendChild(b)});
 addEventListener('keydown',e=>{if(e.key==='Escape')closeZoom()});
 // defaults from the iShares fund page, captured at refresh time
